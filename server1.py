@@ -1,66 +1,98 @@
-import socket 
-import time
+import socket,getopt
+import sys
+
+def main(argv):
+
+    options = "h:p:"
+    long_options = ["host", "port"]
+ 
+    try:
+    # Parsing argument
+        arguments, values = getopt.getopt(argv, options, long_options)
+
+        # checking each argument
+        for currentArgument, currentValue in arguments:
+        
+            if currentArgument in ("-p", "--port"):
+                port = int(currentValue)
+
+            elif currentArgument in ("-h", "--host"):
+                host = currentValue
+
+        #create the socket connection
+        createSocket(port,host)
+
+    except getopt.error as err:
+        # output error, and return with an error code
+        print (str(err))
 
 
+def createSocket(port,host):
 
-try: 
-    #ipv4 and TCP protocols used
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-    print ("Socket successfully created")
+    try: 
+        #ipv4 and TCP protocols used
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+        print ("Socket successfully created")
 
-except socket.error as err: 
-    print ("socket creation failed with error %s" %(err))
-
-#port number and ip address
-port = 12345    
-ip = ''            
-  
-#bind to the port and ip
-s.bind((ip, port))         
-print (f"socket binded to port: {port} on host-ip {ip}")
+    except socket.error as err: 
+        print ("socket creation failed with error %s" %(err))
 
 
-#only 1 connection allowed 
-# 0 indiacates keep no one waiting while server is busy 
-# just refuse
-s.listen(0)     
+    #bind to the port and ip
+    s.bind((host, port))         
+    print (f"socket binded to port: {port} on host-ip {host}")
 
-print ("now the socket is listening .... ")   
+    s.listen()     
 
-while True: 
-  
-    #accept the connection from client. 
-    c, addr = s.accept()     
+    print ("now the socket is listening .... ")   
 
-    print ('Got connection from', addr )
-    msg = 'successfully connected'
-    msg = msg.encode('utf-8')
-
-    #aknowlege the client that connection successful
-    c.send(msg) 
-
-    expression = c.recv(1024).decode('utf-8')
+    while True: 
     
-    print(f"client query: {expression}")
-    
-    num1 = int(expression[0])
-    num2 = int(expression[2])
+        #accept the connection from client. 
+        c, addr = s.accept()     
 
-    operator = expression[1]
+        print ('Got connection from', addr )
+        msg = 'successfully connected'
+        msg = msg.encode('utf-8')
 
-    if operator == '+':
-        result = num1 + num2
-    elif operator == '-':
-        result = num1 - num2
-    elif operator == '*':
-        result = num1*num2
-    else:
-        result = num1/num2
+        #aknowlege the client that connection successful
+        c.send(msg) 
 
-    c.send(str(result).encode('utf-8'))
+        #receive the expression client sends
+        expression = c.recv(1024).decode('utf-8')
 
-    print(f"{num1}  {operator} {num2}")
+        expression = expression.split()
 
-    #Close the connection
-    c.close() 
-    print(f'connection from {addr} is closed')
+        print(f"client query: {expression}")
+
+
+        try:
+
+            num1 = float(expression[0])
+            num2 = float(expression[2])
+            operator = expression[1]
+
+            #perform comutation based on operator type
+
+            if operator == '+':
+                result = num1 + num2
+            elif operator == '-':
+                result = num1 - num2
+            elif operator == '*':
+                result = num1*num2
+            else:
+                result = num1/num2
+
+        except:
+            result = 'invalid format provided'
+
+        #send the result back to client
+        c.send(str(result).encode('utf-8'))
+
+        print(f"sent the client response {result}")
+
+        c.close() 
+        print(f'connection from {addr} is closed')
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
