@@ -30,18 +30,12 @@ def main(argv):
 
 
 def serve(c):
-    #aknowlege the client that connection successful
-    msg = 'successfully connected'
-    msg = msg.encode('utf-8')
-    c.send(msg) 
+    
 
     #receive the expression client sends
     expression = c.recv(1024).decode('utf-8')
-
-    expression = expression.split()
-
     print(f"client query: {expression}")
-
+    expression = expression.split()
 
     try:
 
@@ -89,13 +83,10 @@ def createSocket(port,host):
     
         #accept the connection from client. 
         c, addr = s.accept()    
-
+        print ('Got connection from', addr )
 
         newThread = Thread(target=serve, args=(c,))
         newThread.start()
-
-
-    s.close() 
 
         
 if __name__ == "__main__":

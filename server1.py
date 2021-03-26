@@ -52,18 +52,11 @@ def createSocket(port,host):
         c, addr = s.accept()     
 
         print ('Got connection from', addr )
-        msg = 'successfully connected'
-        msg = msg.encode('utf-8')
-
-        #aknowlege the client that connection successful
-        c.send(msg) 
-
+        
         #receive the expression client sends
         expression = c.recv(1024).decode('utf-8')
-
-        expression = expression.split()
-
         print(f"client query: {expression}")
+        expression = expression.split()
 
 
         try:
