@@ -54,7 +54,7 @@ def createSocket(port,host):
                 print (s.recv(1024).decode('utf-8') )
 
             # close the connection 
-        s.close()    
+        #s.close()    
     except:
         print("failed to connect to the server")
     

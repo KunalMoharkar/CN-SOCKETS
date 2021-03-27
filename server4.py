@@ -33,7 +33,6 @@ def serve(expression):
     #receive the expression client sends
     expression = expression.decode('utf-8')
     print(f"client query: {expression}")
-    
 
     result = expression
 

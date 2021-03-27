@@ -30,6 +30,7 @@ def main(argv):
 
 def serve(expression):
 
+    result = 'quitting connection'
     #receive the expression client sends
     expression = expression.decode('utf-8')
     print(f"client query: {expression}")
@@ -37,7 +38,6 @@ def serve(expression):
     if expression != 'quit':
         expression = expression.split()
 
-    
 
         try:
 
@@ -57,9 +57,7 @@ def serve(expression):
             result = 'invalid format provided'
 
         #send the result back to client
-    else :
-        result = 'closing connecton'
-
+    
     return result
 
 
