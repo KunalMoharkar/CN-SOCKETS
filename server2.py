@@ -31,34 +31,42 @@ def main(argv):
 
 def serve(c):
     
+    expression = ''
 
-    #receive the expression client sends
-    expression = c.recv(1024).decode('utf-8')
-    print(f"client query: {expression}")
-    expression = expression.split()
+    while expression != 'quit':
 
-    try:
-
-        num1 = float(expression[0])
-        num2 = float(expression[2])
-        operator = expression[1]
-        #perform comutation based on operator type
-        if operator == '+':
-            result = num1 + num2
-        elif operator == '-':
-            result = num1 - num2
-        elif operator == '*':
-            result = num1*num2
+        #receive the expression client sends
+        expression = c.recv(1024).decode('utf-8')
+        print(f"client query: {expression}")
+    
+        if expression != 'quit':
+            expression = expression.split()
+    
+            try:
+            
+                num1 = float(expression[0])
+                num2 = float(expression[2])
+                operator = expression[1]
+                #perform comutation based on operator type
+                if operator == '+':
+                    result = num1 + num2
+                elif operator == '-':
+                    result = num1 - num2
+                elif operator == '*':
+                    result = num1*num2
+                else:
+                    result = num1/num2
+            except:
+                result = 'invalid format provided'
+    
+            #send the result back to client
+            c.send(str(result).encode('utf-8'))
+            print(f"sent the client response {result}")
+        
         else:
-            result = num1/num2
-    except:
-        result = 'invalid format provided'
-
-    #send the result back to client
-    c.send(str(result).encode('utf-8'))
-    print(f"sent the client response {result}")
-    c.close() 
-    print(f'connection is closed')
+        
+            c.close() 
+            print(f'client connection is closed')
 
 def createSocket(port,host):
 

@@ -33,34 +33,13 @@ def serve(expression):
     #receive the expression client sends
     expression = expression.decode('utf-8')
     print(f"client query: {expression}")
-
-    if expression != 'quit':
-        expression = expression.split()
-
     
 
-        try:
+    result = expression
 
-            num1 = float(expression[0])
-            num2 = float(expression[2])
-            operator = expression[1]
-            #perform comutation based on operator type
-            if operator == '+':
-                result = num1 + num2
-            elif operator == '-':
-                result = num1 - num2
-            elif operator == '*':
-                result = num1*num2
-            else:
-                result = num1/num2
-        except:
-            result = 'invalid format provided'
-
-        #send the result back to client
-    else :
-        result = 'closing connecton'
-
+    #send the result back to client
     return result
+
 
 
 
@@ -72,7 +51,7 @@ def createSocket(port,host):
     server.setblocking(0)
     server.bind((host, port))
     server.listen()
-    print ("now the socket is listening .... ")
+    print ("Echo server now listening .... ")
     inputs = [server]
     outputs = []
     message_queues = {}

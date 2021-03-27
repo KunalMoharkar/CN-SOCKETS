@@ -30,29 +30,34 @@ def main(argv):
 def createSocket(port,host):
 
     # Create a socket object 
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)        
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)     
+
 
     # connect to the server 
 
     try:
         s.connect((host, port)) 
-    
+        print('successfully connected to the server')
+        exp = ''
+
+        while exp != 'quit':
+
+            #input query
+
+            exp = input('Enter your query or quit to exit : ')
+            print(f"sending query {exp} to the server")
+            s.send(exp.encode('utf-8'))
+
+            if exp != 'quit':
+                
+                print('Response received from the server:')
+                print (s.recv(1024).decode('utf-8') )
+
+            # close the connection 
+        s.close()    
     except:
         print("failed to connect to the server")
     
-    print('successfully connected to the server')
-
-    #input query
-    exp = input()
-    print(f"sending query {exp} to the server")
-
-    s.send(exp.encode('utf-8'))
-
-    print('Response received from the server:')
-    print (s.recv(1024).decode('utf-8') )
-
-    # close the connection 
-    s.close()    
-
+    
 if __name__ == "__main__":
     main(sys.argv[1:])
