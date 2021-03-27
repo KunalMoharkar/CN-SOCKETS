@@ -1,4 +1,4 @@
-import socket,getopt
+import socket, getopt
 import sys
 
 def main(argv):

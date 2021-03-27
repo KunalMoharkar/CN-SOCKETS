@@ -41,8 +41,6 @@ def serve(expression):
 
 
 
-
-
 def createSocket(port,host):
 
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
